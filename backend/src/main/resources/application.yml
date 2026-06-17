@@ -1,0 +1,51 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: demo-backend
+
+  main:
+    web-application-type: reactive
+
+# Keycloak configuration
+keycloak:
+  jwk-set-uri: ${KEYCLOAK_HOST:http://localhost:8080}/realms/demo-realm/protocol/openid-connect/certs
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    com.example.demo: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+keycloak:
+  jwk-set-uri: http://keycloak:8080/realms/demo-realm/protocol/openid-connect/certs
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
